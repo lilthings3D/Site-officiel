@@ -3,904 +3,629 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STRATA3D — Fichiers & Impression 3D</title>
+<title>lil things 3D — Fichiers & Impression 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --black: #0a0a0b;
-    --off-white: #f4f2ee;
-    --cream: #ece9e2;
-    --accent: #e85d2f;
-    --accent-dim: #c44820;
-    --steel: #2a2d35;
-    --steel-light: #3d4150;
-    --muted: #7a7d87;
-    --border: rgba(255,255,255,0.08);
-    --border-light: rgba(0,0,0,0.1);
-    --card-bg: #14151a;
-    --font-display: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: var(--font-body);
-    background: var(--black);
-    color: var(--off-white);
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.25rem 4rem;
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    background: rgba(10,10,11,0.85);
-    border-bottom: 0.5px solid var(--border);
-  }
-
-  .logo {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 1.4rem;
-    letter-spacing: -0.02em;
-    color: var(--off-white);
-    text-decoration: none;
-  }
-  .logo span { color: var(--accent); }
-
-  .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
-  .nav-links a {
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: var(--muted);
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--off-white); }
-
-  .nav-cta {
-    background: var(--accent);
-    color: white !important;
-    padding: 0.5rem 1.25rem;
-    border-radius: 4px;
-    font-weight: 500 !important;
-    transition: background 0.2s !important;
-  }
-  .nav-cta:hover { background: var(--accent-dim) !important; color: white !important; }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 8rem 4rem 5rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(232,93,47,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(232,93,47,0.04) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent);
-    pointer-events: none;
-  }
-
-  .hero-glow {
-    position: absolute;
-    width: 600px; height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(232,93,47,0.12) 0%, transparent 70%);
-    top: -100px; right: -100px;
-    pointer-events: none;
-  }
-
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 500;
-    margin-bottom: 1.5rem;
-  }
-  .hero-tag::before {
-    content: '';
-    display: block;
-    width: 24px; height: 1px;
-    background: var(--accent);
-  }
-
-  .hero h1 {
-    font-family: var(--font-display);
-    font-size: clamp(3.5rem, 7vw, 7rem);
-    font-weight: 800;
-    line-height: 0.95;
-    letter-spacing: -0.04em;
-    max-width: 900px;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero h1 em {
-    font-style: normal;
-    color: var(--accent);
-  }
-
-  .hero p {
-    font-size: 1.15rem;
-    color: var(--muted);
-    max-width: 520px;
-    font-weight: 300;
-    line-height: 1.7;
-    margin-bottom: 2.5rem;
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .btn-primary {
-    background: var(--accent);
-    color: white;
-    padding: 0.875rem 2rem;
-    border-radius: 4px;
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: background 0.2s, transform 0.1s;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    border: none;
-  }
-  .btn-primary:hover { background: var(--accent-dim); transform: translateY(-1px); }
-
-  .btn-outline {
-    background: transparent;
-    color: var(--off-white);
-    padding: 0.875rem 2rem;
-    border-radius: 4px;
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    font-weight: 400;
-    text-decoration: none;
-    border: 0.5px solid rgba(255,255,255,0.2);
-    transition: border-color 0.2s, background 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-  }
-  .btn-outline:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.04); }
-
-  .hero-stats {
-    display: flex;
-    gap: 3rem;
-    margin-top: 4rem;
-    padding-top: 2rem;
-    border-top: 0.5px solid var(--border);
-  }
-  .hero-stat-num {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--off-white);
-    line-height: 1;
-  }
-  .hero-stat-label {
-    font-size: 0.8rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-top: 0.25rem;
-  }
-
-  /* SECTION GENERIC */
-  section { padding: 6rem 4rem; }
-
-  .section-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 500;
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 0.5px;
-    background: var(--border);
-    max-width: 60px;
-  }
-
-  .section-title {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    margin-bottom: 1rem;
-  }
-
-  .section-sub {
-    font-size: 1rem;
-    color: var(--muted);
-    font-weight: 300;
-    max-width: 480px;
-    line-height: 1.7;
-  }
-
-  /* SERVICES */
-  #services {
-    background: var(--black);
-    border-top: 0.5px solid var(--border);
-  }
-
-  .services-header {
-    max-width: 600px;
-    margin-bottom: 4rem;
-  }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 0.5px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .service-card {
-    background: var(--card-bg);
-    padding: 2.5rem 2rem;
-    transition: background 0.25s;
-    position: relative;
-    overflow: hidden;
-  }
-  .service-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s;
-  }
-  .service-card:hover::before { transform: scaleX(1); }
-  .service-card:hover { background: #1a1b22; }
-
-  .service-icon {
-    width: 48px; height: 48px;
-    background: rgba(232,93,47,0.1);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    font-size: 1.4rem;
-    color: var(--accent);
-  }
-
-  .service-card h3 {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.75rem;
-  }
-
-  .service-card p {
-    font-size: 0.9rem;
-    color: var(--muted);
-    line-height: 1.7;
-    font-weight: 300;
-  }
-
-  .service-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: var(--accent);
-    font-size: 0.85rem;
-    font-weight: 500;
-    text-decoration: none;
-    margin-top: 1.5rem;
-    transition: gap 0.2s;
-  }
-  .service-link:hover { gap: 0.7rem; }
-
-  /* CATALOGUE */
-  #catalogue {
-    background: #0d0e12;
-    border-top: 0.5px solid var(--border);
-  }
-
-  .catalogue-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 3rem;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
-
-  .filter-tabs {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .tab {
-    padding: 0.4rem 1rem;
-    border-radius: 100px;
-    font-size: 0.8rem;
-    font-weight: 400;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 0.5px solid var(--border);
-    color: var(--muted);
-    background: transparent;
-    font-family: var(--font-body);
-  }
-  .tab.active, .tab:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
-  }
-
-  .products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .product-card {
-    background: var(--card-bg);
-    border: 0.5px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: border-color 0.25s, transform 0.2s;
-    cursor: pointer;
-  }
-  .product-card:hover { border-color: rgba(232,93,47,0.3); transform: translateY(-3px); }
-
-  .product-thumb {
-    aspect-ratio: 4/3;
-    background: var(--steel);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .product-thumb .thumb-bg {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #1e2128 0%, #2a2d38 100%);
-  }
-
-  .product-thumb .thumb-icon {
-    position: relative;
-    z-index: 1;
-    opacity: 0.6;
-  }
-
-  .product-badge {
-    position: absolute;
-    top: 10px; left: 10px;
-    background: var(--accent);
-    color: white;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.25rem 0.6rem;
-    border-radius: 3px;
-    z-index: 2;
-  }
-
-  .product-info {
-    padding: 1.25rem;
-  }
-
-  .product-category {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    margin-bottom: 0.4rem;
-  }
-
-  .product-name {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    margin-bottom: 0.5rem;
-  }
-
-  .product-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 1rem;
-  }
-
-  .product-price {
-    font-family: var(--font-display);
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--off-white);
-  }
-  .product-price span {
-    font-size: 0.75rem;
-    font-weight: 400;
-    color: var(--muted);
-    font-family: var(--font-body);
-    margin-left: 0.25rem;
-  }
-
-  .btn-add {
-    background: rgba(232,93,47,0.1);
-    border: 0.5px solid rgba(232,93,47,0.3);
-    color: var(--accent);
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: var(--font-body);
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .btn-add:hover { background: var(--accent); border-color: var(--accent); color: white; }
-
-  /* DEVIS */
-  #devis {
-    background: var(--black);
-    border-top: 0.5px solid var(--border);
-  }
-
-  .devis-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5rem;
-    align-items: start;
-  }
-
-  .devis-info h2 { margin-bottom: 1rem; }
-
-  .devis-features {
-    list-style: none;
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .devis-feature {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    font-size: 0.9rem;
-    color: var(--muted);
-    font-weight: 300;
-  }
-
-  .devis-feature-icon {
-    width: 32px; height: 32px;
-    border-radius: 6px;
-    background: rgba(232,93,47,0.08);
-    border: 0.5px solid rgba(232,93,47,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--accent);
-    font-size: 0.9rem;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .devis-feature strong {
-    display: block;
-    color: var(--off-white);
-    font-weight: 500;
-    font-size: 0.95rem;
-    margin-bottom: 0.2rem;
-  }
-
-  /* FORM */
-  .devis-form {
-    background: var(--card-bg);
-    border: 0.5px solid var(--border);
-    border-radius: 12px;
-    padding: 2.5rem;
-  }
-
-  .form-title {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.4rem;
-  }
-
-  .form-subtitle {
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-bottom: 2rem;
-    font-weight: 300;
-  }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    margin-bottom: 1rem;
-  }
-
-  .form-group label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    background: rgba(255,255,255,0.04);
-    border: 0.5px solid var(--border);
-    border-radius: 6px;
-    color: var(--off-white);
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    padding: 0.75rem 1rem;
-    outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
-  }
-
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    border-color: rgba(232,93,47,0.5);
-  }
-
-  .form-group select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a7d87' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    padding-right: 2.5rem;
-  }
-
-  .form-group input::placeholder,
-  .form-group textarea::placeholder {
-    color: rgba(122,125,135,0.5);
-  }
-
-  .form-group select option {
-    background: #1a1b22;
-    color: var(--off-white);
-  }
-
-  .upload-zone {
-    border: 0.5px dashed rgba(232,93,47,0.3);
-    border-radius: 6px;
-    padding: 1.5rem;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    background: rgba(232,93,47,0.02);
-  }
-  .upload-zone:hover {
-    border-color: rgba(232,93,47,0.6);
-    background: rgba(232,93,47,0.05);
-  }
-
-  .upload-icon { font-size: 1.8rem; margin-bottom: 0.5rem; opacity: 0.5; }
-  .upload-text { font-size: 0.85rem; color: var(--muted); font-weight: 300; }
-  .upload-text strong { color: var(--accent); font-weight: 500; }
-
-  .form-submit {
-    width: 100%;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 0.9rem;
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: background 0.2s, transform 0.1s;
-  }
-  .form-submit:hover { background: var(--accent-dim); transform: translateY(-1px); }
-  .form-submit:active { transform: translateY(0); }
-
-  /* MATERIAUX */
-  #materiaux {
-    background: #0d0e12;
-    border-top: 0.5px solid var(--border);
-  }
-
-  .mat-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-top: 3rem;
-  }
-
-  .mat-card {
-    background: var(--card-bg);
-    border: 0.5px solid var(--border);
-    border-radius: 8px;
-    padding: 1.5rem;
-    transition: border-color 0.25s;
-  }
-  .mat-card:hover { border-color: rgba(232,93,47,0.3); }
-
-  .mat-color {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    margin-bottom: 1rem;
-    border: 2px solid rgba(255,255,255,0.1);
-  }
-
-  .mat-name {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-  }
-
-  .mat-desc {
-    font-size: 0.8rem;
-    color: var(--muted);
-    line-height: 1.5;
-    font-weight: 300;
-  }
-
-  .mat-props {
-    display: flex;
-    gap: 0.4rem;
-    flex-wrap: wrap;
-    margin-top: 1rem;
-  }
-
-  .mat-prop {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 0.2rem 0.5rem;
-    border-radius: 3px;
-    background: rgba(255,255,255,0.05);
-    color: var(--muted);
-    border: 0.5px solid var(--border);
-  }
-
-  /* PROCESS */
-  #process {
-    background: var(--black);
-    border-top: 0.5px solid var(--border);
-  }
-
-  .process-steps {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-    margin-top: 4rem;
-    position: relative;
-  }
-
-  .process-steps::after {
-    content: '';
-    position: absolute;
-    top: 24px;
-    left: 10%;
-    right: 10%;
-    height: 0.5px;
-    background: linear-gradient(90deg, transparent, var(--border), var(--border), transparent);
-    z-index: 0;
-  }
-
-  .process-step {
-    padding: 0 1.5rem;
-    position: relative;
-    z-index: 1;
-  }
-
-  .step-num {
-    width: 48px; height: 48px;
-    background: var(--card-bg);
-    border: 0.5px solid var(--border);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 0.8rem;
-    font-weight: 800;
-    color: var(--accent);
-    margin-bottom: 1.5rem;
-    letter-spacing: 0;
-  }
-
-  .process-step h4 {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    margin-bottom: 0.5rem;
-  }
-
-  .process-step p {
-    font-size: 0.85rem;
-    color: var(--muted);
-    line-height: 1.6;
-    font-weight: 300;
-  }
-
-  /* FOOTER */
-  footer {
-    background: #070709;
-    border-top: 0.5px solid var(--border);
-    padding: 3rem 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
-
-  .footer-logo {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--off-white);
-  }
-  .footer-logo span { color: var(--accent); }
-
-  .footer-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-  .footer-links a {
-    font-size: 0.8rem;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .footer-links a:hover { color: var(--off-white); }
-
-  .footer-copy {
-    font-size: 0.75rem;
-    color: var(--muted);
-  }
-
-  /* NOTIFICATION */
-  .notif {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    background: #1a1b22;
-    border: 0.5px solid rgba(232,93,47,0.4);
-    border-radius: 8px;
-    padding: 1rem 1.5rem;
-    font-size: 0.875rem;
-    color: var(--off-white);
-    z-index: 200;
-    transform: translateY(100px);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    max-width: 300px;
-  }
-  .notif.show { transform: translateY(0); opacity: 1; }
-  .notif-icon { color: var(--accent); font-size: 1.1rem; flex-shrink: 0; }
-
-  /* CART */
-  .cart-btn {
-    position: relative;
-    background: transparent;
-    border: 0.5px solid var(--border);
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    color: var(--off-white);
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: border-color 0.2s;
-  }
-  .cart-btn:hover { border-color: rgba(255,255,255,0.3); }
-
-  .cart-count {
-    background: var(--accent);
-    color: white;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    font-size: 0.65rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  @media (max-width: 900px) {
-    nav { padding: 1rem 1.5rem; }
-    .nav-links { display: none; }
-    section, .hero { padding: 4rem 1.5rem; }
-    .hero h1 { font-size: 3rem; }
-    .hero-stats { gap: 1.5rem; }
-    .services-grid { grid-template-columns: 1fr; }
-    .devis-layout { grid-template-columns: 1fr; gap: 2.5rem; }
-    .process-steps { grid-template-columns: 1fr 1fr; }
-    .process-steps::after { display: none; }
-    .process-step { padding: 0 0.75rem; margin-bottom: 2rem; }
-    footer { flex-direction: column; padding: 2rem 1.5rem; }
-    .form-row { grid-template-columns: 1fr; }
-    .catalogue-header { flex-direction: column; align-items: flex-start; }
-  }
+:root {
+  --bg: #f7f3ed;
+  --bg2: #f0ebe2;
+  --bg3: #e8e1d6;
+  --card: #ffffff;
+  --text: #2c2520;
+  --text2: #7a6e65;
+  --text3: #b0a59a;
+  --accent: #c4703a;
+  --accent2: #a85a28;
+  --accent-light: #f5e8dc;
+  --border: rgba(160,140,120,0.18);
+  --border2: rgba(160,140,120,0.32);
+  --shadow: 0 2px 20px rgba(100,70,40,0.07);
+  --shadow-md: 0 4px 32px rgba(100,70,40,0.11);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Nunito', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 3rem;
+  background: rgba(247,243,237,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.logo em { font-style: italic; color: var(--accent); }
+
+.nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+.nav-links a {
+  font-size: 0.9rem; font-weight: 500;
+  color: var(--text2); text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+
+.nav-cta {
+  background: var(--accent) !important;
+  color: white !important;
+  padding: 0.5rem 1.3rem;
+  border-radius: 100px;
+  font-weight: 600 !important;
+  transition: background 0.2s !important;
+}
+.nav-cta:hover { background: var(--accent2) !important; }
+
+.cart-btn {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 100px;
+  padding: 0.45rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem; font-weight: 600;
+  color: var(--text); cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.cart-btn:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+
+.cart-count {
+  background: var(--accent); color: white;
+  width: 20px; height: 20px; border-radius: 50%;
+  font-size: 0.7rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ─── HERO ────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 8rem 3rem 5rem;
+  background: linear-gradient(160deg, var(--bg) 60%, var(--bg2) 100%);
+  position: relative; overflow: hidden;
+}
+
+.hero-deco {
+  position: absolute;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,112,58,0.08) 0%, transparent 70%);
+  top: -80px; right: -80px; pointer-events: none;
+}
+.hero-deco2 {
+  position: absolute;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,112,58,0.05) 0%, transparent 70%);
+  bottom: 5%; left: 10%; pointer-events: none;
+}
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent); font-weight: 600; margin-bottom: 1.25rem;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: 700px;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+.hero h1 em { font-style: italic; color: var(--accent); }
+
+.hero p {
+  font-size: 1.1rem; color: var(--text2); max-width: 480px;
+  font-weight: 300; line-height: 1.75; margin-bottom: 2.5rem;
+}
+
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.btn-primary {
+  background: var(--accent); color: white;
+  padding: 0.85rem 2rem; border-radius: 100px;
+  font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+
+.btn-outline {
+  background: transparent; color: var(--text);
+  padding: 0.85rem 2rem; border-radius: 100px;
+  font-family: var(--font-body); font-size: 0.95rem; font-weight: 500;
+  text-decoration: none; border: 1.5px solid var(--border2); cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.btn-outline:hover { border-color: var(--accent); background: var(--accent-light); }
+
+.hero-stats {
+  display: flex; gap: 2.5rem; margin-top: 4rem;
+  padding-top: 2rem; border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.hero-stat-num {
+  font-family: var(--font-display);
+  font-size: 1.8rem; font-weight: 600; color: var(--text); line-height: 1;
+}
+.hero-stat-label { font-size: 0.78rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.2rem; }
+
+/* ─── SECTIONS ────────────────────────── */
+section { padding: 5.5rem 3rem; }
+
+.section-label {
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); font-weight: 600; margin-bottom: 0.6rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-weight: 400; letter-spacing: -0.02em; line-height: 1.15;
+  margin-bottom: 0.75rem;
+}
+
+.section-sub { font-size: 1rem; color: var(--text2); font-weight: 300; max-width: 450px; line-height: 1.7; }
+
+/* ─── SERVICES ────────────────────────── */
+#services { background: var(--bg2); }
+
+.services-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem;
+}
+
+.service-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 2rem 1.75rem;
+  box-shadow: var(--shadow); transition: box-shadow 0.25s, transform 0.2s;
+}
+.service-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+
+.service-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--accent-light); display: flex; align-items: center;
+  justify-content: center; font-size: 1.4rem; margin-bottom: 1.25rem;
+}
+
+.service-card h3 {
+  font-family: var(--font-display); font-size: 1.15rem; font-weight: 600;
+  margin-bottom: 0.6rem; color: var(--text);
+}
+.service-card p { font-size: 0.88rem; color: var(--text2); line-height: 1.7; font-weight: 300; }
+.service-link {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  color: var(--accent); font-size: 0.85rem; font-weight: 600;
+  text-decoration: none; margin-top: 1.25rem; transition: gap 0.2s;
+}
+.service-link:hover { gap: 0.6rem; }
+
+/* ─── CATALOGUE ───────────────────────── */
+#catalogue { background: var(--bg); }
+
+.catalogue-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1.5rem;
+}
+
+.filter-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.tab {
+  padding: 0.4rem 1.1rem; border-radius: 100px;
+  font-size: 0.82rem; font-weight: 500; cursor: pointer;
+  border: 1.5px solid var(--border2); color: var(--text2);
+  background: transparent; font-family: var(--font-body);
+  transition: all 0.2s;
+}
+.tab.active, .tab:hover { background: var(--accent); border-color: var(--accent); color: white; }
+
+.products-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem;
+}
+
+.product-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow); transition: box-shadow 0.25s, transform 0.2s;
+}
+.product-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+
+.product-thumb {
+  aspect-ratio: 4/3; background: var(--bg2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.8rem; position: relative; overflow: hidden;
+}
+.product-thumb-img {
+  width: 100%; height: 100%; object-fit: cover;
+  position: absolute; inset: 0;
+}
+
+.product-badge {
+  position: absolute; top: 10px; left: 10px;
+  background: var(--accent); color: white;
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 0.25rem 0.65rem; border-radius: 100px;
+}
+
+.product-info { padding: 1.25rem; }
+.product-category { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); margin-bottom: 0.35rem; }
+.product-name { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text); }
+.product-desc { font-size: 0.82rem; color: var(--text2); font-weight: 300; line-height: 1.5; }
+
+.product-meta {
+  display: flex; align-items: center; justify-content: space-between; margin-top: 1rem;
+}
+.product-price { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: var(--text); }
+.product-price span { font-size: 0.72rem; font-weight: 400; color: var(--text3); font-family: var(--font-body); margin-left: 0.2rem; }
+
+.btn-add {
+  background: var(--accent-light); border: 1.5px solid rgba(196,112,58,0.25);
+  color: var(--accent); padding: 0.45rem 1rem; border-radius: 100px;
+  font-size: 0.8rem; font-weight: 600; cursor: pointer; font-family: var(--font-body);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.btn-add:hover { background: var(--accent); border-color: var(--accent); color: white; }
+
+/* ─── MATÉRIAUX ───────────────────────── */
+#materiaux { background: var(--bg2); }
+
+.mat-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem; margin-top: 3rem;
+}
+
+.mat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem;
+  box-shadow: var(--shadow); transition: box-shadow 0.2s;
+}
+.mat-card:hover { box-shadow: var(--shadow-md); }
+
+.mat-color {
+  width: 36px; height: 36px; border-radius: 50%; margin-bottom: 1rem;
+  border: 2px solid rgba(0,0,0,0.06);
+}
+.mat-name { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+.mat-desc { font-size: 0.8rem; color: var(--text2); line-height: 1.5; font-weight: 300; }
+.mat-props { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-top: 0.75rem; }
+.mat-prop {
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 0.2rem 0.55rem; border-radius: 100px;
+  background: var(--bg2); color: var(--text3); border: 1px solid var(--border);
+}
+
+/* ─── PROCESS ─────────────────────────── */
+#process { background: var(--bg); }
+
+.process-steps {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 0;
+  margin-top: 4rem; position: relative;
+}
+.process-steps::after {
+  content: ''; position: absolute;
+  top: 22px; left: 8%; right: 8%; height: 1px;
+  background: var(--border2); z-index: 0;
+}
+.process-step { padding: 0 1.25rem; position: relative; z-index: 1; }
+
+.step-num {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--card); border: 1.5px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 0.85rem; font-weight: 600;
+  color: var(--accent); margin-bottom: 1.25rem;
+}
+.process-step h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+.process-step p { font-size: 0.85rem; color: var(--text2); line-height: 1.6; font-weight: 300; }
+
+/* ─── DEVIS ───────────────────────────── */
+#devis { background: var(--bg2); }
+
+.devis-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+
+.devis-features { list-style: none; margin-top: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+.devis-feature { display: flex; align-items: flex-start; gap: 1rem; font-size: 0.88rem; color: var(--text2); font-weight: 300; }
+.devis-feature-icon {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: var(--accent-light); border: 1px solid rgba(196,112,58,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; flex-shrink: 0; margin-top: 2px;
+}
+.devis-feature strong { display: block; color: var(--text); font-weight: 600; font-size: 0.92rem; margin-bottom: 0.15rem; }
+
+.devis-form {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 2.25rem; box-shadow: var(--shadow-md);
+}
+.form-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; margin-bottom: 0.3rem; }
+.form-subtitle { font-size: 0.85rem; color: var(--text2); margin-bottom: 1.75rem; font-weight: 300; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0; }
+.form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+.form-group label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text2); }
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: var(--bg); border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: var(--font-body); font-size: 0.9rem;
+  padding: 0.7rem 1rem; outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s; width: 100%;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(196,112,58,0.1);
+}
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23b0a59a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--text3); }
+
+.upload-zone {
+  border: 2px dashed rgba(196,112,58,0.3); border-radius: var(--radius-sm);
+  padding: 1.5rem; text-align: center; cursor: pointer;
+  background: var(--accent-light); transition: border-color 0.2s;
+}
+.upload-zone:hover { border-color: var(--accent); }
+.upload-icon { font-size: 1.6rem; margin-bottom: 0.4rem; opacity: 0.6; }
+.upload-text { font-size: 0.82rem; color: var(--text2); font-weight: 300; }
+.upload-text strong { color: var(--accent); font-weight: 600; }
+
+.form-submit {
+  width: 100%; background: var(--accent); color: white; border: none;
+  border-radius: 100px; padding: 0.9rem;
+  font-family: var(--font-display); font-size: 1rem; font-weight: 600;
+  cursor: pointer; margin-top: 0.75rem; letter-spacing: -0.01em;
+  transition: background 0.2s, transform 0.1s;
+}
+.form-submit:hover { background: var(--accent2); transform: translateY(-1px); }
+
+/* ─── FOOTER ──────────────────────────── */
+footer {
+  background: var(--bg3); border-top: 1px solid var(--border2);
+  padding: 2.5rem 3rem;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+}
+.footer-logo { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--text); }
+.footer-logo em { font-style: italic; color: var(--accent); }
+.footer-links { display: flex; gap: 1.5rem; list-style: none; }
+.footer-links a { font-size: 0.82rem; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--text); }
+.footer-copy { font-size: 0.75rem; color: var(--text3); }
+
+/* ─── NOTIFICATION ────────────────────── */
+.notif {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 300;
+  background: var(--card); border: 1px solid rgba(196,112,58,0.3);
+  border-radius: var(--radius); padding: 1rem 1.5rem;
+  font-size: 0.875rem; color: var(--text);
+  box-shadow: var(--shadow-md);
+  display: flex; align-items: center; gap: 0.75rem; max-width: 320px;
+  transform: translateY(100px); opacity: 0;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.notif.show { transform: translateY(0); opacity: 1; }
+.notif-icon { color: var(--accent); font-size: 1.1rem; flex-shrink: 0; }
+
+/* ─── SUCCESS MESSAGE ─────────────────── */
+.form-success {
+  display: none; background: #f0faf4; border: 1.5px solid #6dbf87;
+  border-radius: var(--radius-sm); padding: 1rem 1.25rem;
+  font-size: 0.9rem; color: #2d6a4a; font-weight: 500; margin-top: 0.75rem;
+  text-align: center;
+}
+
+/* ─── ADMIN OVERLAY ───────────────────── */
+#adminOverlay {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(44,37,32,0.55); backdrop-filter: blur(4px);
+}
+#adminOverlay.open { display: flex; align-items: flex-start; justify-content: flex-end; }
+
+#adminPanel {
+  width: 540px; max-width: 95vw; height: 100vh;
+  background: var(--card); border-left: 1px solid var(--border2);
+  overflow-y: auto; display: flex; flex-direction: column;
+}
+
+.admin-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.5rem 2rem; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: var(--card); z-index: 1;
+}
+.admin-header h2 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; }
+.admin-close {
+  background: var(--bg2); border: none; border-radius: 50%;
+  width: 36px; height: 36px; font-size: 1.1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text2); transition: background 0.2s;
+}
+.admin-close:hover { background: var(--bg3); }
+
+.admin-body { padding: 1.5rem 2rem; flex: 1; }
+
+.admin-tabs {
+  display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border);
+}
+.admin-tab {
+  padding: 0.6rem 1.2rem; font-family: var(--font-body); font-size: 0.85rem;
+  font-weight: 600; cursor: pointer; background: none; border: none;
+  color: var(--text3); border-bottom: 2px solid transparent;
+  margin-bottom: -1px; transition: all 0.2s;
+}
+.admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.admin-section { display: none; }
+.admin-section.active { display: block; }
+
+.admin-section-title {
+  font-family: var(--font-display); font-size: 1rem; font-weight: 600;
+  margin-bottom: 1.25rem; color: var(--text);
+}
+
+/* Admin product list */
+.admin-product-list { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
+
+.admin-product-item {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 1rem 1.25rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.admin-product-emoji { font-size: 1.5rem; flex-shrink: 0; }
+.admin-product-info { flex: 1; min-width: 0; }
+.admin-product-name { font-weight: 600; font-size: 0.9rem; }
+.admin-product-meta { font-size: 0.78rem; color: var(--text2); }
+.admin-product-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+
+.btn-edit, .btn-delete {
+  padding: 0.35rem 0.85rem; border-radius: 100px;
+  font-size: 0.78rem; font-weight: 600; cursor: pointer; font-family: var(--font-body);
+  transition: all 0.2s;
+}
+.btn-edit { background: var(--accent-light); border: 1px solid rgba(196,112,58,0.2); color: var(--accent); }
+.btn-edit:hover { background: var(--accent); color: white; }
+.btn-delete { background: #fef0f0; border: 1px solid #f5c2c2; color: #c0392b; }
+.btn-delete:hover { background: #c0392b; color: white; }
+
+/* Admin form mini */
+.admin-form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+.admin-form-group label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text2); }
+.admin-form-group input,
+.admin-form-group select,
+.admin-form-group textarea {
+  background: var(--bg); border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: var(--font-body); font-size: 0.88rem;
+  padding: 0.6rem 0.9rem; outline: none; width: 100%;
+  transition: border-color 0.2s;
+}
+.admin-form-group input:focus,
+.admin-form-group select:focus,
+.admin-form-group textarea:focus { border-color: var(--accent); }
+
+.admin-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+.btn-admin-save {
+  background: var(--accent); color: white; border: none;
+  border-radius: 100px; padding: 0.75rem 2rem;
+  font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: background 0.2s; width: 100%; margin-top: 0.5rem;
+}
+.btn-admin-save:hover { background: var(--accent2); }
+
+/* Style panel */
+.style-section { margin-bottom: 2rem; }
+.style-section-title { font-weight: 600; font-size: 0.88rem; margin-bottom: 1rem; color: var(--text); }
+
+.color-pickers { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.color-picker-row { display: flex; flex-direction: column; gap: 0.3rem; }
+.color-picker-row label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text2); font-weight: 600; }
+.color-picker-row input[type=color] {
+  width: 100%; height: 38px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border2); cursor: pointer; padding: 2px;
+  background: var(--bg);
+}
+
+.font-options { display: flex; flex-direction: column; gap: 0.5rem; }
+.font-option {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.75rem 1rem; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border); cursor: pointer;
+  transition: border-color 0.2s; background: var(--bg);
+}
+.font-option.selected { border-color: var(--accent); background: var(--accent-light); }
+.font-option span { font-size: 0.88rem; color: var(--text2); }
+.font-preview { font-size: 1rem; font-weight: 600; color: var(--text); min-width: 80px; }
+
+.admin-password-gate {
+  position: absolute; inset: 0; background: var(--card);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1rem; padding: 2rem;
+}
+.admin-password-gate h3 { font-family: var(--font-display); font-size: 1.2rem; }
+.admin-password-gate input {
+  width: 100%; max-width: 280px; padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border2); border-radius: var(--radius-sm);
+  font-family: var(--font-body); font-size: 0.9rem; outline: none;
+  text-align: center; letter-spacing: 0.2em;
+  background: var(--bg); color: var(--text);
+}
+.admin-password-gate button {
+  background: var(--accent); color: white; border: none;
+  padding: 0.75rem 2rem; border-radius: 100px;
+  font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+}
+.admin-password-gate button:hover { background: var(--accent2); }
+.admin-pw-error { color: #c0392b; font-size: 0.82rem; display: none; }
+
+/* ADMIN BTN flottant */
+.admin-fab {
+  position: fixed; bottom: 2rem; left: 2rem; z-index: 190;
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: 100px; padding: 0.6rem 1.2rem;
+  font-family: var(--font-body); font-size: 0.8rem; font-weight: 600;
+  color: var(--text2); cursor: pointer; box-shadow: var(--shadow);
+  transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem;
+}
+.admin-fab:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--shadow-md); }
+
+/* ─── RESPONSIVE ──────────────────────── */
+@media (max-width: 900px) {
+  nav { padding: 0.9rem 1.25rem; }
+  .nav-links { display: none; }
+  section, .hero { padding: 3.5rem 1.25rem; }
+  .hero h1 { font-size: 2.6rem; }
+  .services-grid { grid-template-columns: 1fr; }
+  .devis-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .process-steps { grid-template-columns: 1fr 1fr; }
+  .process-steps::after { display: none; }
+  .process-step { margin-bottom: 1.5rem; }
+  footer { flex-direction: column; padding: 2rem 1.25rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .catalogue-header { flex-direction: column; align-items: flex-start; }
+  .admin-form-row { grid-template-columns: 1fr; }
+  .color-pickers { grid-template-columns: 1fr; }
+}
 </style>
 </head>
-<body>
+<body id="mainBody">
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="logo">STRATA<span>3D</span></a>
+  <a href="#home" class="logo"><em>lil</em> things 3D</a>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
     <li><a href="#catalogue">Catalogue</a></li>
@@ -909,49 +634,34 @@
     <li><a href="#devis" class="nav-cta">Demander un devis</a></li>
   </ul>
   <button class="cart-btn" onclick="toggleCart()">
-    🛒 Panier
-    <span class="cart-count" id="cartCount">0</span>
+    🛍️ Panier <span class="cart-count" id="cartCount">0</span>
   </button>
 </nav>
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-tag">Fabrication numérique</div>
+  <div class="hero-deco"></div>
+  <div class="hero-deco2"></div>
+  <div class="hero-tag">✦ Fabrication numérique artisanale</div>
   <h1>Vos idées<br>prennent <em>forme.</em></h1>
-  <p>Fichiers 3D premium, objets imprimés sur mesure, et service d'impression à la demande. De la conception à la livraison.</p>
+  <p>Fichiers 3D prêts à imprimer, objets imprimés sur mesure, et service d'impression à la demande. De la conception à la livraison.</p>
   <div class="hero-actions">
     <a href="#catalogue" class="btn-primary">Voir le catalogue →</a>
     <a href="#devis" class="btn-outline">Demander un devis</a>
   </div>
   <div class="hero-stats">
-    <div>
-      <div class="hero-stat-num">240+</div>
-      <div class="hero-stat-label">Fichiers disponibles</div>
-    </div>
-    <div>
-      <div class="hero-stat-num">12</div>
-      <div class="hero-stat-label">Matériaux</div>
-    </div>
-    <div>
-      <div class="hero-stat-num">48h</div>
-      <div class="hero-stat-label">Délai moyen</div>
-    </div>
-    <div>
-      <div class="hero-stat-num">98%</div>
-      <div class="hero-stat-label">Satisfaction client</div>
-    </div>
+    <div><div class="hero-stat-num" id="stat-fichiers">150+</div><div class="hero-stat-label">Fichiers disponibles</div></div>
+    <div><div class="hero-stat-num">12</div><div class="hero-stat-label">Matériaux</div></div>
+    <div><div class="hero-stat-num">48h</div><div class="hero-stat-label">Délai moyen</div></div>
+    <div><div class="hero-stat-num">98%</div><div class="hero-stat-label">Satisfaction client</div></div>
   </div>
 </section>
 
 <!-- SERVICES -->
 <section id="services">
-  <div class="services-header">
-    <div class="section-label">Ce que je propose</div>
-    <h2 class="section-title">Trois façons<br>de travailler ensemble</h2>
-    <p class="section-sub">Des fichiers instantanément téléchargeables à l'impression de pièces uniques, choisissez ce dont vous avez besoin.</p>
-  </div>
+  <div class="section-label">Ce que je propose</div>
+  <h2 class="section-title">Trois façons<br>de collaborer</h2>
+  <p class="section-sub">Des fichiers instantanément téléchargeables à l'impression de pièces uniques.</p>
   <div class="services-grid">
     <div class="service-card">
       <div class="service-icon">📦</div>
@@ -962,13 +672,13 @@
     <div class="service-card">
       <div class="service-icon">🖨️</div>
       <h3>Impression sur devis</h3>
-      <p>Envoyez votre fichier ou une description de votre projet. Je m'occupe de l'impression, du post-traitement et de la livraison.</p>
+      <p>Envoyez votre fichier ou décrivez votre projet. Je m'occupe de l'impression, du post-traitement et de l'expédition.</p>
       <a href="#devis" class="service-link">Demander un devis →</a>
     </div>
     <div class="service-card">
       <div class="service-icon">✏️</div>
       <h3>Conception sur mesure</h3>
-      <p>Besoin d'un modèle unique ? Je conçois votre objet de A à Z selon vos spécifications, et je l'imprime si vous le souhaitez.</p>
+      <p>Besoin d'un modèle unique ? Je conçois votre objet de A à Z selon vos specs, et je l'imprime si vous le souhaitez.</p>
       <a href="#devis" class="service-link">Lancer un projet →</a>
     </div>
   </div>
@@ -989,132 +699,7 @@
       <button class="tab" onclick="filterProducts('bijoux', this)">Bijoux</button>
     </div>
   </div>
-  <div class="products-grid" id="productsGrid">
-
-    <div class="product-card" data-cat="deco">
-      <div class="product-thumb">
-        <div class="thumb-bg"></div>
-        <div class="thumb-icon">🏺</div>
-        <span class="product-badge">Bestseller</span>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Décoration</div>
-        <div class="product-name">Vase géométrique Voronoi</div>
-        <div class="product-meta">
-          <div class="product-price">4,90 €<span>STL inclus</span></div>
-          <button class="btn-add" onclick="addToCart('Vase géométrique Voronoi', 4.90)">+ Ajouter</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="fonctionnel">
-      <div class="product-thumb">
-        <div class="thumb-bg"></div>
-        <div class="thumb-icon">🔧</div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Fonctionnel</div>
-        <div class="product-name">Support téléphone articulé</div>
-        <div class="product-meta">
-          <div class="product-price">3,50 €<span>STL inclus</span></div>
-          <button class="btn-add" onclick="addToCart('Support téléphone articulé', 3.50)">+ Ajouter</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="miniature">
-      <div class="product-thumb">
-        <div class="thumb-bg"></div>
-        <div class="thumb-icon">⚔️</div>
-        <span class="product-badge">Nouveau</span>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Miniatures</div>
-        <div class="product-name">Guerrier médiéval — Pack</div>
-        <div class="product-meta">
-          <div class="product-price">8,90 €<span>6 fichiers</span></div>
-          <button class="btn-add" onclick="addToCart('Guerrier médiéval Pack', 8.90)">+ Ajouter</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="deco">
-      <div class="product-thumb">
-        <div class="thumb-bg"></div>
-        <div class="thumb-icon">🌿</div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Décoration</div>
-        <div class="product-name">Pot de fleurs mural modulaire</div>
-        <div class="product-meta">
-          <div class="product-price">5,50 €<span>STL inclus</span></div>
-          <button class="btn-add" onclick="addToCart('Pot de fleurs mural', 5.50)">+ Ajouter</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="bijoux">
-      <div class="product-thumb">
-        <div class="thumb-bg"></div>
-        <div class="thumb-icon">💍</div>
-        <span class="product-badge">Premium</span>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Bijoux</div>
-        <div class="product-name">Bague torsadée paramétrique</div>
-        <div class="product-meta">
-          <div class="product-price">6,90 €<span>STL + FBX</span></div>
-          <button class="btn-add" onclick="addToCart('Bague torsadée', 6.90)">+ Ajouter</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="fonctionnel">
-      <div class="product-thumb">
-        <div class="thumb-bg"></div>
-        <div class="thumb-icon">🗂️</div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Fonctionnel</div>
-        <div class="product-name">Organisateur de bureau</div>
-        <div class="product-meta">
-          <div class="product-price">4,20 €<span>STL inclus</span></div>
-          <button class="btn-add" onclick="addToCart('Organisateur bureau', 4.20)">+ Ajouter</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="miniature">
-      <div class="product-thumb">
-        <div class="thumb-bg"></div>
-        <div class="thumb-icon">🏰</div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Miniatures</div>
-        <div class="product-name">Décor château fantastique</div>
-        <div class="product-meta">
-          <div class="product-price">12,00 €<span>Pack complet</span></div>
-          <button class="btn-add" onclick="addToCart('Décor château', 12.00)">+ Ajouter</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-card" data-cat="bijoux">
-      <div class="product-thumb">
-        <div class="thumb-bg"></div>
-        <div class="thumb-icon">📿</div>
-      </div>
-      <div class="product-info">
-        <div class="product-category">Bijoux</div>
-        <div class="product-name">Collier géométrique — Set</div>
-        <div class="product-meta">
-          <div class="product-price">7,50 €<span>STL inclus</span></div>
-          <button class="btn-add" onclick="addToCart('Collier géométrique', 7.50)">+ Ajouter</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
+  <div class="products-grid" id="productsGrid"></div>
 </section>
 
 <!-- MATERIAUX -->
@@ -1122,63 +707,13 @@
   <div class="section-label">Matériaux disponibles</div>
   <h2 class="section-title">Choix du matériau</h2>
   <p class="section-sub">Chaque projet mérite le bon matériau. Je travaille avec une large gamme de filaments et résines.</p>
-
   <div class="mat-grid">
-    <div class="mat-card">
-      <div class="mat-color" style="background: #e8e0d5;"></div>
-      <div class="mat-name">PLA</div>
-      <div class="mat-desc">Idéal pour la décoration et prototypes. Facile à imprimer, biodégradable.</div>
-      <div class="mat-props">
-        <span class="mat-prop">Doux</span>
-        <span class="mat-prop">Coloré</span>
-        <span class="mat-prop">Éco</span>
-      </div>
-    </div>
-    <div class="mat-card">
-      <div class="mat-color" style="background: #c8d4e0;"></div>
-      <div class="mat-name">PETG</div>
-      <div class="mat-desc">Résistant à l'humidité et aux chocs. Parfait pour les pièces fonctionnelles.</div>
-      <div class="mat-props">
-        <span class="mat-prop">Résistant</span>
-        <span class="mat-prop">Durable</span>
-      </div>
-    </div>
-    <div class="mat-card">
-      <div class="mat-color" style="background: #3a3a3a;"></div>
-      <div class="mat-name">ABS</div>
-      <div class="mat-desc">Haute résistance thermique et mécanique pour les environnements exigeants.</div>
-      <div class="mat-props">
-        <span class="mat-prop">Technique</span>
-        <span class="mat-prop">Chaud</span>
-      </div>
-    </div>
-    <div class="mat-card">
-      <div class="mat-color" style="background: #f5c842;"></div>
-      <div class="mat-name">TPU</div>
-      <div class="mat-desc">Flexible et élastique. Parfait pour les coques, joints et accessoires.</div>
-      <div class="mat-props">
-        <span class="mat-prop">Flex</span>
-        <span class="mat-prop">Élastique</span>
-      </div>
-    </div>
-    <div class="mat-card">
-      <div class="mat-color" style="background: #d4c5e8;"></div>
-      <div class="mat-name">Résine standard</div>
-      <div class="mat-desc">Finition ultra-précise pour bijoux, figurines et prototypes haute résolution.</div>
-      <div class="mat-props">
-        <span class="mat-prop">Précis</span>
-        <span class="mat-prop">Lisse</span>
-      </div>
-    </div>
-    <div class="mat-card">
-      <div class="mat-color" style="background: #8b7355;"></div>
-      <div class="mat-name">PLA Wood</div>
-      <div class="mat-desc">Aspect bois naturel pour des créations décoratives uniques et chaleureuses.</div>
-      <div class="mat-props">
-        <span class="mat-prop">Naturel</span>
-        <span class="mat-prop">Deco</span>
-      </div>
-    </div>
+    <div class="mat-card"><div class="mat-color" style="background:#e8e0d5;"></div><div class="mat-name">PLA</div><div class="mat-desc">Idéal pour la déco et prototypes. Facile à imprimer, biodégradable.</div><div class="mat-props"><span class="mat-prop">Doux</span><span class="mat-prop">Coloré</span><span class="mat-prop">Éco</span></div></div>
+    <div class="mat-card"><div class="mat-color" style="background:#c8d4e0;"></div><div class="mat-name">PETG</div><div class="mat-desc">Résistant à l'humidité et aux chocs. Pièces fonctionnelles.</div><div class="mat-props"><span class="mat-prop">Résistant</span><span class="mat-prop">Durable</span></div></div>
+    <div class="mat-card"><div class="mat-color" style="background:#3a3a3a;"></div><div class="mat-name">ABS</div><div class="mat-desc">Haute résistance thermique et mécanique pour les environnements exigeants.</div><div class="mat-props"><span class="mat-prop">Technique</span><span class="mat-prop">Solide</span></div></div>
+    <div class="mat-card"><div class="mat-color" style="background:#f5c842;"></div><div class="mat-name">TPU</div><div class="mat-desc">Flexible et élastique. Parfait pour coques, joints, accessoires.</div><div class="mat-props"><span class="mat-prop">Flex</span><span class="mat-prop">Souple</span></div></div>
+    <div class="mat-card"><div class="mat-color" style="background:#d4c5e8;"></div><div class="mat-name">Résine</div><div class="mat-desc">Finition ultra-précise pour bijoux, figurines et prototypes haute résolution.</div><div class="mat-props"><span class="mat-prop">Précis</span><span class="mat-prop">Lisse</span></div></div>
+    <div class="mat-card"><div class="mat-color" style="background:#8b7355;"></div><div class="mat-name">PLA Wood</div><div class="mat-desc">Aspect bois naturel pour des créations décoratives chaleureuses.</div><div class="mat-props"><span class="mat-prop">Naturel</span><span class="mat-prop">Déco</span></div></div>
   </div>
 </section>
 
@@ -1187,26 +722,10 @@
   <div class="section-label">Comment ça marche</div>
   <h2 class="section-title">De la commande<br>à la livraison</h2>
   <div class="process-steps">
-    <div class="process-step">
-      <div class="step-num">01</div>
-      <h4>Votre demande</h4>
-      <p>Remplissez le formulaire de devis avec votre fichier ou description du projet, matériau souhaité et quantités.</p>
-    </div>
-    <div class="process-step">
-      <div class="step-num">02</div>
-      <h4>Devis personnalisé</h4>
-      <p>Je vous envoie un devis détaillé sous 24h avec délai, coût et options disponibles.</p>
-    </div>
-    <div class="process-step">
-      <div class="step-num">03</div>
-      <h4>Impression & contrôle</h4>
-      <p>Après validation, j'imprime votre pièce et réalise un contrôle qualité complet avant expédition.</p>
-    </div>
-    <div class="process-step">
-      <div class="step-num">04</div>
-      <h4>Livraison</h4>
-      <p>Votre commande est emballée soigneusement et expédiée avec suivi. Délai moyen : 48-72h.</p>
-    </div>
+    <div class="process-step"><div class="step-num">01</div><h4>Votre demande</h4><p>Remplissez le formulaire avec votre fichier ou description, matériau souhaité et quantités.</p></div>
+    <div class="process-step"><div class="step-num">02</div><h4>Devis personnalisé</h4><p>Je vous envoie un devis détaillé sous 24h avec délai, coût et options disponibles.</p></div>
+    <div class="process-step"><div class="step-num">03</div><h4>Impression & contrôle</h4><p>Après validation, j'imprime votre pièce et réalise un contrôle qualité complet.</p></div>
+    <div class="process-step"><div class="step-num">04</div><h4>Livraison</h4><p>Emballé soigneusement et expédié avec suivi. Délai moyen : 48–72h.</p></div>
   </div>
 </section>
 
@@ -1216,64 +735,27 @@
     <div class="devis-info">
       <div class="section-label">Impression sur mesure</div>
       <h2 class="section-title">Demandez<br>votre devis</h2>
-      <p class="section-sub">Un projet en tête ? Un fichier à imprimer ? Décrivez votre besoin et je vous réponds sous 24 heures.</p>
-
+      <p class="section-sub">Décrivez votre besoin et je vous réponds sous 24 heures à <strong>lilthings.3d@outlook.com</strong></p>
       <ul class="devis-features">
-        <li class="devis-feature">
-          <div class="devis-feature-icon">⚡</div>
-          <div>
-            <strong>Réponse rapide</strong>
-            Devis envoyé sous 24h, impression démarrée après validation.
-          </div>
-        </li>
-        <li class="devis-feature">
-          <div class="devis-feature-icon">🎨</div>
-          <div>
-            <strong>Post-traitement inclus</strong>
-            Ponçage, peinture, vernissage disponibles selon vos besoins.
-          </div>
-        </li>
-        <li class="devis-feature">
-          <div class="devis-feature-icon">📐</div>
-          <div>
-            <strong>Toutes tailles</strong>
-            De la pièce miniature à l'objet de grande dimension, plusieurs sessions si nécessaire.
-          </div>
-        </li>
-        <li class="devis-feature">
-          <div class="devis-feature-icon">🔒</div>
-          <div>
-            <strong>Satisfaction garantie</strong>
-            Je reprends l'impression en cas de défaut. Votre satisfaction avant tout.
-          </div>
-        </li>
+        <li class="devis-feature"><div class="devis-feature-icon">⚡</div><div><strong>Réponse rapide</strong>Devis envoyé sous 24h, impression démarrée après validation.</div></li>
+        <li class="devis-feature"><div class="devis-feature-icon">🎨</div><div><strong>Post-traitement inclus</strong>Ponçage, peinture, vernissage disponibles selon vos besoins.</div></li>
+        <li class="devis-feature"><div class="devis-feature-icon">📐</div><div><strong>Toutes tailles</strong>De la pièce miniature à l'objet de grande dimension.</div></li>
+        <li class="devis-feature"><div class="devis-feature-icon">🔒</div><div><strong>Satisfaction garantie</strong>Je reprends l'impression en cas de défaut.</div></li>
       </ul>
     </div>
 
     <div class="devis-form">
       <div class="form-title">Formulaire de devis</div>
       <div class="form-subtitle">Tous les champs sont indicatifs, je m'adapte à votre projet.</div>
-
       <div class="form-row">
-        <div class="form-group">
-          <label>Prénom</label>
-          <input type="text" placeholder="Marie">
-        </div>
-        <div class="form-group">
-          <label>Nom</label>
-          <input type="text" placeholder="Dupont">
-        </div>
+        <div class="form-group"><label>Prénom</label><input type="text" id="f_prenom" placeholder="Marie"></div>
+        <div class="form-group"><label>Nom</label><input type="text" id="f_nom" placeholder="Dupont"></div>
       </div>
-
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" placeholder="marie.dupont@email.com">
-      </div>
-
+      <div class="form-group"><label>Email *</label><input type="email" id="f_email" placeholder="marie@email.com"></div>
       <div class="form-row">
         <div class="form-group">
           <label>Matériau souhaité</label>
-          <select>
+          <select id="f_materiau">
             <option value="">Sélectionner...</option>
             <option>PLA — Standard</option>
             <option>PETG — Résistant</option>
@@ -1284,41 +766,36 @@
             <option>Je ne sais pas</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Quantité</label>
-          <input type="number" placeholder="1" min="1">
-        </div>
+        <div class="form-group"><label>Quantité</label><input type="number" id="f_quantite" placeholder="1" min="1"></div>
       </div>
-
-      <div class="form-group">
-        <label>Description du projet</label>
-        <textarea rows="3" placeholder="Décrivez votre projet, dimensions approximatives, utilisation prévue..."></textarea>
-      </div>
-
+      <div class="form-group"><label>Description du projet *</label><textarea id="f_description" rows="3" placeholder="Décrivez votre projet, dimensions approximatives, utilisation prévue..."></textarea></div>
       <div class="form-group">
         <label>Fichier 3D (optionnel)</label>
-        <div class="upload-zone" onclick="this.nextElementSibling.click()">
+        <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
           <div class="upload-icon">📁</div>
           <div class="upload-text"><strong>Cliquez pour uploader</strong> ou glissez votre fichier<br>.stl, .obj, .3mf, .step</div>
         </div>
-        <input type="file" accept=".stl,.obj,.3mf,.step,.stp" style="display:none">
+        <input type="file" id="fileInput" accept=".stl,.obj,.3mf,.step,.stp" style="display:none" onchange="updateUploadLabel(this)">
       </div>
-
-      <button class="form-submit" onclick="submitForm()">Envoyer la demande de devis →</button>
+      <button class="form-submit" id="submitBtn" onclick="sendDevis()">Envoyer la demande →</button>
+      <div class="form-success" id="formSuccess">✅ Demande envoyée ! Je vous réponds sous 24h.</div>
+      <div id="formError" style="display:none;background:#fef0f0;border:1.5px solid #f5c2c2;border-radius:8px;padding:1rem;font-size:0.85rem;color:#c0392b;margin-top:0.75rem;text-align:center;">
+        ❌ Erreur lors de l'envoi. Écrivez-nous directement à <strong>lilthings.3d@outlook.com</strong>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">STRATA<span>3D</span></div>
+  <div class="footer-logo"><em>lil</em> things 3D</div>
   <ul class="footer-links">
     <li><a href="#catalogue">Catalogue</a></li>
     <li><a href="#devis">Devis</a></li>
     <li><a href="#materiaux">Matériaux</a></li>
-    <li><a href="mailto:contact@strata3d.fr">Contact</a></li>
+    <li><a href="mailto:lilthings.3d@outlook.com">Contact</a></li>
   </ul>
-  <div class="footer-copy">© 2025 STRATA3D — Tous droits réservés</div>
+  <div class="footer-copy">© 2025 lil things 3D — Tous droits réservés</div>
 </footer>
 
 <!-- NOTIFICATION -->
@@ -1327,55 +804,496 @@
   <span id="notifText">Article ajouté au panier</span>
 </div>
 
+<!-- ADMIN FAB -->
+<button class="admin-fab" onclick="openAdmin()">⚙️ Admin</button>
+
+<!-- ADMIN PANEL -->
+<div id="adminOverlay">
+  <div id="adminPanel" style="position:relative;">
+
+    <!-- PASSWORD GATE -->
+    <div class="admin-password-gate" id="adminGate">
+      <div style="font-size:2rem;">🔒</div>
+      <h3>Accès admin</h3>
+      <p style="font-size:0.85rem;color:var(--text2);text-align:center;">Entrez le mot de passe pour accéder au panneau d'administration.</p>
+      <input type="password" id="adminPwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkAdminPw()">
+      <div class="admin-pw-error" id="adminPwError">Mot de passe incorrect.</div>
+      <button onclick="checkAdminPw()">Accéder →</button>
+      <p style="font-size:0.75rem;color:var(--text3);">Mot de passe par défaut : <code>admin123</code></p>
+    </div>
+
+    <!-- PANEL CONTENT (hidden until auth) -->
+    <div id="adminContent" style="display:none;flex-direction:column;height:100%;">
+      <div class="admin-header">
+        <h2>⚙️ Administration</h2>
+        <button class="admin-close" onclick="closeAdmin()">✕</button>
+      </div>
+      <div class="admin-body">
+
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="switchAdminTab('produits', this)">Produits</button>
+          <button class="admin-tab" onclick="switchAdminTab('style', this)">Apparence</button>
+          <button class="admin-tab" onclick="switchAdminTab('infos', this)">Infos site</button>
+        </div>
+
+        <!-- PRODUITS -->
+        <div class="admin-section active" id="tab-produits">
+          <div class="admin-section-title">Articles en vente</div>
+          <div class="admin-product-list" id="adminProductList"></div>
+          <div class="admin-section-title" style="margin-top:1.5rem;">Ajouter / modifier un article</div>
+          <div class="admin-form-row">
+            <div class="admin-form-group"><label>Emoji / icône</label><input type="text" id="pEmoji" placeholder="🏺" maxlength="4"></div>
+            <div class="admin-form-group"><label>Catégorie</label>
+              <select id="pCat">
+                <option value="deco">Décoration</option>
+                <option value="fonctionnel">Fonctionnel</option>
+                <option value="miniature">Miniatures</option>
+                <option value="bijoux">Bijoux</option>
+              </select>
+            </div>
+          </div>
+          <div class="admin-form-group"><label>Nom de l'article</label><input type="text" id="pName" placeholder="Vase géométrique Voronoi"></div>
+          <div class="admin-form-group"><label>Description courte</label><textarea id="pDesc" rows="2" placeholder="Description affichée sur la carte produit..."></textarea></div>
+          <div class="admin-form-row">
+            <div class="admin-form-group"><label>Prix (€)</label><input type="number" id="pPrice" placeholder="4.90" step="0.01" min="0"></div>
+            <div class="admin-form-group"><label>Étiquette prix</label><input type="text" id="pPriceLabel" placeholder="STL inclus"></div>
+          </div>
+          <div class="admin-form-group">
+            <label>Badge (optionnel)</label>
+            <select id="pBadge">
+              <option value="">Aucun</option>
+              <option value="Nouveau">Nouveau</option>
+              <option value="Bestseller">Bestseller</option>
+              <option value="Premium">Premium</option>
+              <option value="Promo">Promo</option>
+            </select>
+          </div>
+          <input type="hidden" id="editingProductId" value="">
+          <button class="btn-admin-save" onclick="saveProduct()">💾 Sauvegarder l'article</button>
+          <button style="width:100%;margin-top:0.5rem;background:var(--bg2);border:1px solid var(--border2);border-radius:100px;padding:0.6rem;font-family:var(--font-body);font-size:0.85rem;font-weight:600;color:var(--text2);cursor:pointer;" onclick="clearProductForm()">Annuler / nouveau</button>
+        </div>
+
+        <!-- STYLE -->
+        <div class="admin-section" id="tab-style">
+          <div class="style-section">
+            <div class="style-section-title">🎨 Couleurs</div>
+            <div class="color-pickers">
+              <div class="color-picker-row"><label>Fond principal</label><input type="color" id="cBg" value="#f7f3ed" oninput="applyStyle()"></div>
+              <div class="color-picker-row"><label>Fond secondaire</label><input type="color" id="cBg2" value="#f0ebe2" oninput="applyStyle()"></div>
+              <div class="color-picker-row"><label>Couleur accent</label><input type="color" id="cAccent" value="#c4703a" oninput="applyStyle()"></div>
+              <div class="color-picker-row"><label>Couleur texte</label><input type="color" id="cText" value="#2c2520" oninput="applyStyle()"></div>
+            </div>
+          </div>
+          <div class="style-section">
+            <div class="style-section-title">🔤 Police de caractères</div>
+            <div class="font-options">
+              <div class="font-option selected" onclick="setFont('playfair', this)" style="font-family:'Playfair Display',serif;">
+                <span class="font-preview" style="font-family:'Playfair Display',serif;">lil things 3D</span>
+                <span>Playfair Display — élégant, classique</span>
+              </div>
+              <div class="font-option" onclick="setFont('cormorant', this)">
+                <span class="font-preview" style="font-family:'Cormorant Garamond',serif;">lil things 3D</span>
+                <span>Cormorant Garamond — raffiné, littéraire</span>
+              </div>
+              <div class="font-option" onclick="setFont('josefin', this)">
+                <span class="font-preview" style="font-family:'Josefin Sans',sans-serif;">lil things 3D</span>
+                <span>Josefin Sans — géométrique, moderne</span>
+              </div>
+              <div class="font-option" onclick="setFont('lora', this)">
+                <span class="font-preview" style="font-family:'Lora',serif;">lil things 3D</span>
+                <span>Lora — chaleureux, lisible</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-admin-save" onclick="saveStyle()">💾 Sauvegarder l'apparence</button>
+          <button style="width:100%;margin-top:0.5rem;background:var(--bg2);border:1px solid var(--border2);border-radius:100px;padding:0.6rem;font-family:var(--font-body);font-size:0.85rem;font-weight:600;color:var(--text2);cursor:pointer;" onclick="resetStyle()">Réinitialiser l'apparence</button>
+        </div>
+
+        <!-- INFOS SITE -->
+        <div class="admin-section" id="tab-infos">
+          <div class="admin-section-title">Informations générales</div>
+          <div class="admin-form-group"><label>Nom du site</label><input type="text" id="siteName" value="lil things 3D"></div>
+          <div class="admin-form-group"><label>Slogan hero</label><input type="text" id="siteTagline" value="✦ Fabrication numérique artisanale"></div>
+          <div class="admin-form-group"><label>Titre H1</label><input type="text" id="siteH1" value="Vos idées prennent forme."></div>
+          <div class="admin-form-group"><label>Sous-titre hero</label><textarea id="siteSubtitle" rows="2">Fichiers 3D prêts à imprimer, objets imprimés sur mesure, et service d'impression à la demande.</textarea></div>
+          <div class="admin-form-group"><label>Email de contact</label><input type="email" id="siteEmail" value="lilthings.3d@outlook.com"></div>
+          <div class="admin-section-title" style="margin-top:1.5rem;">Statistiques hero</div>
+          <div class="admin-form-row">
+            <div class="admin-form-group"><label>Fichiers disponibles</label><input type="text" id="statFichiers" value="150+"></div>
+            <div class="admin-form-group"><label>Matériaux</label><input type="text" id="statMat" value="12"></div>
+          </div>
+          <div class="admin-form-row">
+            <div class="admin-form-group"><label>Délai moyen</label><input type="text" id="statDelai" value="48h"></div>
+            <div class="admin-form-group"><label>Satisfaction</label><input type="text" id="statSatisf" value="98%"></div>
+          </div>
+          <div class="admin-section-title" style="margin-top:1.5rem;">Mot de passe admin</div>
+          <div class="admin-form-group"><label>Nouveau mot de passe</label><input type="password" id="newAdminPw" placeholder="Laisser vide pour ne pas changer"></div>
+          <button class="btn-admin-save" onclick="saveSiteInfos()">💾 Sauvegarder les infos</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-  let cartItems = 0;
-  let cartTotal = 0;
+// ─── DONNÉES ──────────────────────────────────
+let ADMIN_PASSWORD = localStorage.getItem('lt3d_pw') || 'admin123';
+let cartItems = 0, cartTotal = 0;
 
-  function addToCart(name, price) {
-    cartItems++;
-    cartTotal += price;
-    document.getElementById('cartCount').textContent = cartItems;
-    showNotif(`"${name}" ajouté au panier · ${cartTotal.toFixed(2)} €`);
-  }
+let products = JSON.parse(localStorage.getItem('lt3d_products') || 'null') || [
+  { id: 1, emoji: '🏺', cat: 'deco',        name: 'Vase géométrique Voronoi',   desc: 'Impression FDM optimisée, sans support.', price: 4.90, priceLabel: 'STL inclus', badge: 'Bestseller' },
+  { id: 2, emoji: '🔧', cat: 'fonctionnel', name: 'Support téléphone articulé', desc: 'Réglable en angle, solide en PETG.', price: 3.50, priceLabel: 'STL inclus', badge: '' },
+  { id: 3, emoji: '⚔️', cat: 'miniature',   name: 'Guerrier médiéval — Pack',   desc: '6 figurines détaillées pour table de jeu.', price: 8.90, priceLabel: '6 fichiers', badge: 'Nouveau' },
+  { id: 4, emoji: '🌿', cat: 'deco',        name: 'Pot de fleurs mural',        desc: 'Modulable, accroché sans perçage.', price: 5.50, priceLabel: 'STL inclus', badge: '' },
+  { id: 5, emoji: '💍', cat: 'bijoux',      name: 'Bague torsadée paramétrique',desc: 'Personnalisable en taille à la commande.', price: 6.90, priceLabel: 'STL + FBX', badge: 'Premium' },
+  { id: 6, emoji: '🗂️', cat: 'fonctionnel', name: 'Organisateur de bureau',     desc: 'Compartiments modulables, impression rapide.', price: 4.20, priceLabel: 'STL inclus', badge: '' },
+];
 
-  function toggleCart() {
-    showNotif(`${cartItems} article(s) · Total : ${cartTotal.toFixed(2)} €`);
-  }
+let siteStyle = JSON.parse(localStorage.getItem('lt3d_style') || 'null') || null;
+let siteInfo  = JSON.parse(localStorage.getItem('lt3d_info')  || 'null') || null;
 
-  function showNotif(msg) {
-    const n = document.getElementById('notif');
-    document.getElementById('notifText').textContent = msg;
-    n.classList.add('show');
-    setTimeout(() => n.classList.remove('show'), 3000);
-  }
+// ─── INIT ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  emailjs.init('JeHX5X-N1ZCTr1GvC');
+  if (siteStyle) applyStoredStyle(siteStyle);
+  if (siteInfo)  applyStoredInfo(siteInfo);
+  renderProducts();
+  renderAdminList();
+  loadFonts();
+});
 
-  function filterProducts(cat, btn) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.product-card').forEach(card => {
-      if (cat === 'all' || card.dataset.cat === cat) {
-        card.style.display = '';
-        card.style.animation = 'none';
-        requestAnimationFrame(() => {
-          card.style.animation = '';
-        });
-      } else {
-        card.style.display = 'none';
-      }
+// ─── EMAILJS SEND ─────────────────────────────
+function sendDevis() {
+  const email = document.getElementById('f_email').value.trim();
+  const desc  = document.getElementById('f_description').value.trim();
+  if (!email) { showNotif('Merci d\'entrer votre email.'); return; }
+  if (!desc)  { showNotif('Merci de décrire votre projet.'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Envoi en cours...';
+  btn.disabled = true;
+
+  const params = {
+    prenom:      document.getElementById('f_prenom').value,
+    nom:         document.getElementById('f_nom').value,
+    email:       email,
+    materiau:    document.getElementById('f_materiau').value || 'Non précisé',
+    quantite:    document.getElementById('f_quantite').value || '1',
+    description: desc,
+  };
+
+  emailjs.send('service_msrlt4o', 'template_uayllkc', params)
+    .then(() => {
+      document.getElementById('formSuccess').style.display = 'block';
+      document.getElementById('formError').style.display   = 'none';
+      ['f_prenom','f_nom','f_email','f_description','f_quantite'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f_materiau').value = '';
+      btn.textContent = 'Envoyer la demande →';
+      btn.disabled = false;
+      setTimeout(() => document.getElementById('formSuccess').style.display = 'none', 6000);
+    })
+    .catch(() => {
+      document.getElementById('formError').style.display   = 'block';
+      document.getElementById('formSuccess').style.display = 'none';
+      btn.textContent = 'Envoyer la demande →';
+      btn.disabled = false;
     });
-  }
+}
 
-  function submitForm() {
-    showNotif('Demande envoyée ! Réponse sous 24h 🎉');
-  }
+// ─── PRODUCTS ─────────────────────────────────
+function renderProducts(filter = 'all') {
+  const grid = document.getElementById('productsGrid');
+  const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
+  grid.innerHTML = filtered.map(p => `
+    <div class="product-card" data-cat="${p.cat}">
+      <div class="product-thumb">
+        <span style="font-size:2.8rem;position:relative;z-index:1;">${p.emoji}</span>
+        ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+      </div>
+      <div class="product-info">
+        <div class="product-category">${catLabel(p.cat)}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-meta">
+          <div class="product-price">${p.price.toFixed(2)} €<span>${p.priceLabel}</span></div>
+          <button class="btn-add" onclick="addToCart('${p.name}', ${p.price})">+ Ajouter</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
 
-  // Smooth parallax scroll for hero glow
-  window.addEventListener('scroll', () => {
-    const glow = document.querySelector('.hero-glow');
-    if (glow) {
-      glow.style.transform = `translateY(${window.scrollY * 0.3}px)`;
-    }
-  });
+function catLabel(c) {
+  return { deco: 'Décoration', fonctionnel: 'Fonctionnel', miniature: 'Miniatures', bijoux: 'Bijoux' }[c] || c;
+}
+
+function filterProducts(cat, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(cat);
+}
+
+function saveProducts() {
+  localStorage.setItem('lt3d_products', JSON.stringify(products));
+}
+
+// ─── CART ─────────────────────────────────────
+function addToCart(name, price) {
+  cartItems++; cartTotal += price;
+  document.getElementById('cartCount').textContent = cartItems;
+  showNotif(`"${name}" ajouté · Total : ${cartTotal.toFixed(2)} €`);
+}
+function toggleCart() {
+  showNotif(cartItems === 0 ? 'Votre panier est vide.' : `${cartItems} article(s) · ${cartTotal.toFixed(2)} €`);
+}
+
+// ─── NOTIF ────────────────────────────────────
+function showNotif(msg) {
+  const n = document.getElementById('notif');
+  document.getElementById('notifText').textContent = msg;
+  n.classList.add('show');
+  clearTimeout(n._t);
+  n._t = setTimeout(() => n.classList.remove('show'), 3500);
+}
+
+// ─── UPLOAD LABEL ─────────────────────────────
+function updateUploadLabel(input) {
+  if (input.files.length > 0) {
+    input.previousElementSibling.querySelector('.upload-text').innerHTML =
+      `<strong>${input.files[0].name}</strong><br>Fichier sélectionné ✓`;
+  }
+}
+
+// ─── ADMIN ────────────────────────────────────
+function openAdmin() {
+  document.getElementById('adminOverlay').classList.add('open');
+  document.getElementById('adminGate').style.display = 'flex';
+  document.getElementById('adminContent').style.display = 'none';
+  document.getElementById('adminPwInput').value = '';
+  document.getElementById('adminPwError').style.display = 'none';
+}
+
+function closeAdmin() {
+  document.getElementById('adminOverlay').classList.remove('open');
+}
+
+document.getElementById('adminOverlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('adminOverlay')) closeAdmin();
+});
+
+function checkAdminPw() {
+  const val = document.getElementById('adminPwInput').value;
+  if (val === ADMIN_PASSWORD) {
+    document.getElementById('adminGate').style.display = 'none';
+    document.getElementById('adminContent').style.display = 'flex';
+    renderAdminList();
+    loadStylePanel();
+    loadInfoPanel();
+  } else {
+    document.getElementById('adminPwError').style.display = 'block';
+  }
+}
+
+function switchAdminTab(tab, btn) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ─── ADMIN PRODUCTS ───────────────────────────
+function renderAdminList() {
+  const list = document.getElementById('adminProductList');
+  if (!list) return;
+  list.innerHTML = products.map(p => `
+    <div class="admin-product-item">
+      <div class="admin-product-emoji">${p.emoji}</div>
+      <div class="admin-product-info">
+        <div class="admin-product-name">${p.name}</div>
+        <div class="admin-product-meta">${catLabel(p.cat)} · ${p.price.toFixed(2)} €${p.badge ? ' · ' + p.badge : ''}</div>
+      </div>
+      <div class="admin-product-actions">
+        <button class="btn-edit" onclick="editProduct(${p.id})">Modifier</button>
+        <button class="btn-delete" onclick="deleteProduct(${p.id})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('editingProductId').value = id;
+  document.getElementById('pEmoji').value = p.emoji;
+  document.getElementById('pCat').value = p.cat;
+  document.getElementById('pName').value = p.name;
+  document.getElementById('pDesc').value = p.desc;
+  document.getElementById('pPrice').value = p.price;
+  document.getElementById('pPriceLabel').value = p.priceLabel;
+  document.getElementById('pBadge').value = p.badge;
+  switchAdminTab('produits', document.querySelector('.admin-tab'));
+  document.querySelector('.admin-tab').classList.add('active');
+}
+
+function deleteProduct(id) {
+  if (!confirm('Supprimer cet article ?')) return;
+  products = products.filter(p => p.id !== id);
+  saveProducts(); renderProducts(); renderAdminList();
+  showNotif('Article supprimé.');
+}
+
+function saveProduct() {
+  const editId = document.getElementById('editingProductId').value;
+  const p = {
+    id: editId ? parseInt(editId) : Date.now(),
+    emoji: document.getElementById('pEmoji').value || '📦',
+    cat:   document.getElementById('pCat').value,
+    name:  document.getElementById('pName').value,
+    desc:  document.getElementById('pDesc').value,
+    price: parseFloat(document.getElementById('pPrice').value) || 0,
+    priceLabel: document.getElementById('pPriceLabel').value || 'STL inclus',
+    badge: document.getElementById('pBadge').value,
+  };
+  if (!p.name) { showNotif('Le nom est requis.'); return; }
+  if (editId) {
+    const i = products.findIndex(x => x.id === parseInt(editId));
+    products[i] = p;
+  } else {
+    products.push(p);
+  }
+  saveProducts(); renderProducts(); renderAdminList(); clearProductForm();
+  showNotif('Article sauvegardé ✓');
+}
+
+function clearProductForm() {
+  ['pEmoji','pName','pDesc','pPrice','pPriceLabel','editingProductId'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pBadge').value = '';
+  document.getElementById('pCat').value = 'deco';
+}
+
+// ─── ADMIN STYLE ──────────────────────────────
+function loadStylePanel() {
+  if (!siteStyle) return;
+  if (siteStyle.bg)     document.getElementById('cBg').value     = siteStyle.bg;
+  if (siteStyle.bg2)    document.getElementById('cBg2').value    = siteStyle.bg2;
+  if (siteStyle.accent) document.getElementById('cAccent').value = siteStyle.accent;
+  if (siteStyle.text)   document.getElementById('cText').value   = siteStyle.text;
+}
+
+function applyStyle() {
+  const r = document.documentElement.style;
+  r.setProperty('--bg',     document.getElementById('cBg').value);
+  r.setProperty('--bg2',    document.getElementById('cBg2').value);
+  r.setProperty('--accent', document.getElementById('cAccent').value);
+  r.setProperty('--text',   document.getElementById('cText').value);
+  const hex = document.getElementById('cAccent').value;
+  r.setProperty('--accent2',       lightenDarken(hex, -25));
+  r.setProperty('--accent-light',  hexToRgba(hex, 0.1));
+}
+
+function applyStoredStyle(s) {
+  const r = document.documentElement.style;
+  if (s.bg)     r.setProperty('--bg', s.bg);
+  if (s.bg2)    r.setProperty('--bg2', s.bg2);
+  if (s.bg3)    r.setProperty('--bg3', s.bg3);
+  if (s.accent) { r.setProperty('--accent', s.accent); r.setProperty('--accent2', lightenDarken(s.accent,-25)); r.setProperty('--accent-light', hexToRgba(s.accent,0.1)); }
+  if (s.text)   r.setProperty('--text', s.text);
+  if (s.font)   applyFont(s.font);
+}
+
+function saveStyle() {
+  const s = { bg: document.getElementById('cBg').value, bg2: document.getElementById('cBg2').value, accent: document.getElementById('cAccent').value, text: document.getElementById('cText').value, font: window._selectedFont || 'playfair' };
+  localStorage.setItem('lt3d_style', JSON.stringify(s));
+  siteStyle = s;
+  showNotif('Apparence sauvegardée ✓');
+}
+
+function resetStyle() {
+  localStorage.removeItem('lt3d_style'); siteStyle = null;
+  document.documentElement.removeAttribute('style');
+  loadFonts('playfair');
+  showNotif('Apparence réinitialisée.');
+}
+
+// ─── FONTS ────────────────────────────────────
+const fontMap = {
+  playfair:   { url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap', family: "'Playfair Display', Georgia, serif" },
+  cormorant:  { url: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap', family: "'Cormorant Garamond', Georgia, serif" },
+  josefin:    { url: 'https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap', family: "'Josefin Sans', sans-serif" },
+  lora:       { url: 'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&display=swap', family: "'Lora', Georgia, serif" },
+};
+
+function loadFonts(key) {
+  const k = key || (siteStyle && siteStyle.font) || 'playfair';
+  if (!fontMap[k]) return;
+  let link = document.getElementById('dynamicFont');
+  if (!link) { link = document.createElement('link'); link.rel = 'stylesheet'; link.id = 'dynamicFont'; document.head.appendChild(link); }
+  link.href = fontMap[k].url;
+  document.documentElement.style.setProperty('--font-display', fontMap[k].family);
+  window._selectedFont = k;
+}
+
+function applyFont(key) { loadFonts(key); }
+
+function setFont(key, el) {
+  document.querySelectorAll('.font-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  loadFonts(key);
+}
+
+// ─── ADMIN INFOS ──────────────────────────────
+function loadInfoPanel() {
+  if (!siteInfo) return;
+  if (siteInfo.name)     document.getElementById('siteName').value     = siteInfo.name;
+  if (siteInfo.tagline)  document.getElementById('siteTagline').value  = siteInfo.tagline;
+  if (siteInfo.h1)       document.getElementById('siteH1').value       = siteInfo.h1;
+  if (siteInfo.subtitle) document.getElementById('siteSubtitle').value = siteInfo.subtitle;
+  if (siteInfo.email)    document.getElementById('siteEmail').value    = siteInfo.email;
+  if (siteInfo.statF)    document.getElementById('statFichiers').value  = siteInfo.statF;
+  if (siteInfo.statM)    document.getElementById('statMat').value       = siteInfo.statM;
+  if (siteInfo.statD)    document.getElementById('statDelai').value     = siteInfo.statD;
+  if (siteInfo.statS)    document.getElementById('statSatisf').value    = siteInfo.statS;
+}
+
+function saveSiteInfos() {
+  const info = {
+    name:     document.getElementById('siteName').value,
+    tagline:  document.getElementById('siteTagline').value,
+    h1:       document.getElementById('siteH1').value,
+    subtitle: document.getElementById('siteSubtitle').value,
+    email:    document.getElementById('siteEmail').value,
+    statF:    document.getElementById('statFichiers').value,
+    statM:    document.getElementById('statMat').value,
+    statD:    document.getElementById('statDelai').value,
+    statS:    document.getElementById('statSatisf').value,
+  };
+  const newPw = document.getElementById('newAdminPw').value;
+  if (newPw) { ADMIN_PASSWORD = newPw; localStorage.setItem('lt3d_pw', newPw); }
+  localStorage.setItem('lt3d_info', JSON.stringify(info));
+  siteInfo = info;
+  applyStoredInfo(info);
+  showNotif('Infos sauvegardées ✓');
+}
+
+function applyStoredInfo(info) {
+  if (info.name) { document.title = info.name + ' — Fichiers & Impression 3D'; }
+  if (info.tagline) { const el = document.querySelector('.hero-tag'); if(el) el.textContent = info.tagline; }
+  if (info.statF) { const el = document.getElementById('stat-fichiers'); if(el) el.textContent = info.statF; }
+}
+
+// ─── COLOR UTILS ──────────────────────────────
+function lightenDarken(hex, amt) {
+  let c = parseInt(hex.slice(1), 16);
+  let r = Math.max(0, Math.min(255, (c >> 16) + amt));
+  let g = Math.max(0, Math.min(255, ((c >> 8) & 0xFF) + amt));
+  let b = Math.max(0, Math.min(255, (c & 0xFF) + amt));
+  return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+function hexToRgba(hex, alpha) {
+  const c = parseInt(hex.slice(1), 16);
+  return `rgba(${c>>16},${(c>>8)&0xFF},${c&0xFF},${alpha})`;
+}
 </script>
 </body>
 </html>
